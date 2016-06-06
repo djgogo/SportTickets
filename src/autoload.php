@@ -7,7 +7,7 @@ spl_autoload_register(
         static $classes = null;
         if ($classes === null) {
             $classes = array(
-                'formvalidator' => '/FormValidator.php',
+                'sportticketsformcommand' => '/SportTicketsFormCommand.php',
                 'xslrenderer' => '/XslRenderer.php'
             );
         }

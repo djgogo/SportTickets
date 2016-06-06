@@ -32,7 +32,7 @@
 
                             <div class="form-group row">
                                 <label for="anrede" class="col-sm-2 control-label">Anrede</label>
-                                <select class="col-xs-3" id="anrede">
+                                <select class="col-xs-3" id="anrede" name="anrede">
                                     <option>Herr</option>
                                     <option>Frau</option>
                                 </select>
@@ -41,30 +41,30 @@
                             <div class="form-group row">
                                 <label for="name" class="col-sm-2 control-label">Name *</label>
                                 <div class="col-xs-3">
-                                    <input type="text" class="form-control" id="name" name="name" placeholder="Name"/>
+                                    <input type="text" class="form-control" id="name" name="name" value="{//form/field[@name='name']/value}" placeholder="Name"/>
                                 </div>
-                                <xsl:if test="//formError/field[@name='name'] != ''">
-                                    <p>Fehler! <xsl:value-of select="//formError/field[@name='name']" /></p>
+                                <xsl:if test="//form/field[@name='name']/error != ''">
+                                    <p>Fehler! <xsl:value-of select="//form/field[@name='name']/error" /></p>
                                 </xsl:if>
                             </div>
 
                             <div class="form-group row">
                                 <label for="vorname" class="col-sm-2 control-label">Vorname *</label>
                                 <div class="col-xs-3">
-                                    <input type="text" class="form-control" id="vorname" name ="vorname" placeholder="Vorname"/>
+                                    <input type="text" class="form-control" id="vorname" name ="vorname" value="{//form/field[@name='vorname']/value}" placeholder="Vorname"/>
                                 </div>
-                                <xsl:if test="//formError/field[@name='vorname'] != ''">
-                                    <p>Fehler! <xsl:value-of select="//formError/field[@name='vorname']" /></p>
+                                <xsl:if test="//form/field[@name='vorname']/error!= ''">
+                                    <p>Fehler! <xsl:value-of select="//form/field[@name='vorname']/error" /></p>
                                 </xsl:if>
                             </div>
 
                             <div class="form-group row">
                                 <label for="strasse" class="col-sm-2 control-label">Strasse *</label>
                                 <div class="col-xs-3">
-                                    <input type="text" class="form-control" id="strasse" name="strasse" placeholder="Strasse"/>
+                                    <input type="text" class="form-control" id="strasse" name="strasse" value="{//form/field[@name='strasse']/value}" placeholder="Strasse"/>
                                 </div>
-                                <xsl:if test="//formError/field[@name='strasse'] != ''">
-                                    <p>Fehler! <xsl:value-of select="//formError/field[@name='strasse']" /></p>
+                                <xsl:if test="//form/field[@name='strasse']/error != ''">
+                                    <p>Fehler! <xsl:value-of select="//form/field[@name='strasse']/error" /></p>
                                 </xsl:if>
                             </div>
 
@@ -72,37 +72,37 @@
                             <div class="form-group row">
                                 <label for="plz" class="col-sm-2 control-label">PLZ *</label>
                                 <div class="col-xs-1">
-                                    <input type="text" class="form-control" id="plz" name="plz" placeholder="PLZ"/>
+                                    <input type="text" class="form-control" id="plz" name="plz" value="{//form/field[@name='plz']/value}" placeholder="PLZ"/>
                                 </div>
-                                <xsl:if test="//formError/field[@name='plz'] != ''">
-                                    <p>Fehler! <xsl:value-of select="//formError/field[@name='plz']" /></p>
+                                <xsl:if test="//form/field[@name='plz']/error != ''">
+                                    <p>Fehler! <xsl:value-of select="//form/field[@name='plz']/error" /></p>
                                 </xsl:if>
                             </div>
 
                             <div class="form-group row">
                                 <label for="ort" class="col-sm-2 control-label">Ort *</label>
                                 <div class="col-xs-3">
-                                    <input type="text" class="form-control" id="ort" name="ort" placeholder="Ort"/>
+                                    <input type="text" class="form-control" id="ort" name="ort" value="{//form/field[@name='ort']/value}" placeholder="Ort"/>
                                 </div>
-                                <xsl:if test="//formError/field[@name='ort'] != ''">
-                                    <p>Fehler! <xsl:value-of select="//formError/field[@name='ort']" /></p>
+                                <xsl:if test="//form/field[@name='ort']/error != ''">
+                                    <p>Fehler! <xsl:value-of select="//form/field[@name='ort']/error" /></p>
                                 </xsl:if>
                             </div>
 
                             <div class="form-group row">
                                 <label for="phone" class="col-sm-2 control-label">Telefon Nummer</label>
                                 <div class="col-xs-3">
-                                    <input type="text" class="form-control" id="phone" name="phone" placeholder="Telefon"/>
+                                    <input type="text" class="form-control" id="phone" name="phone" value="{//form/field[@name='phone']/value}" placeholder="Telefon"/>
                                 </div>
                             </div>
 
                             <div class="form-group row">
                                 <label for="email" class="col-sm-2 control-label">E-Mail Adresse *</label>
                                 <div class="col-xs-3">
-                                    <input type="email" class="form-control" id="email" name="email" placeholder="Email"/>
+                                    <input type="email" class="form-control" id="email" name="email" value="{//form/field[@name='email']/value}" placeholder="Email"/>
                                 </div>
-                                <xsl:if test="//formError/field[@name='email'] != ''">
-                                    <p>Fehler! <xsl:value-of select="//formError/field[@name='email']" /></p>
+                                <xsl:if test="//form/field[@name='email']/error != ''">
+                                    <p>Fehler! <xsl:value-of select="//form/field[@name='email']/error" /></p>
                                 </xsl:if>
                             </div>
 
@@ -113,35 +113,44 @@
                                 <div class="col-xs-3">
                                     <div class="radio">
                                         <label>
-                                            <input type="radio" name="sportart" id="sportart1" value="fussball"/>
+                                            <input type="radio" name="sportart" id="sportart1" value="Fussball" >
+                                                <xsl:if test="//form/field[@name='sportart']/value = 'Fussball'">
+                                                    <xsl:attribute name="checked">checked</xsl:attribute></xsl:if>
+                                            </input>
                                             Fussball
                                         </label>
                                     </div>
                                     <div class="radio">
                                         <label>
-                                            <input type="radio" name="sportart" id="sportar2t" value="handball"/>
+                                            <input type="radio" name="sportart" id="sportar2t" value="Handball" >
+                                                <xsl:if test="//form/field[@name='sportart']/value = 'Handball'">
+                                                    <xsl:attribute name="checked">checked</xsl:attribute></xsl:if>
+                                            </input>
                                             Handball
                                         </label>
                                     </div>
                                     <div class="radio">
                                         <label>
-                                            <input type="radio" name="sportart" id="sportart3" value="volleyball"/>
+                                            <input type="radio" name="sportart" id="sportart3" value="Volleyball" >
+                                                <xsl:if test="//form/field[@name='sportart']/value = 'Volleyball'">
+                                                    <xsl:attribute name="checked">checked</xsl:attribute></xsl:if>
+                                            </input>
                                             Volleyball
                                         </label>
                                     </div>
                                 </div>
                             </div>
-                            <xsl:if test="//formError/field[@name='sportart'] != ''">
-                                <p>Fehler! <xsl:value-of select="//formError/field[@name='sportart']" /></p>
+                            <xsl:if test="//form/field[@name='sportart']/error != ''">
+                                <p>Fehler! <xsl:value-of select="//form/field[@name='sportart']/error" /></p>
                             </xsl:if>
 
                             <div class="form-group row">
                                 <label for="anzahl" class="col-sm-2 control-label">Anzahl Tickets *</label>
                                 <div class="col-xs-3">
-                                    <input type="text" class="form-control" id="anzahl" name="anzahl" placeholder="Anzahl"/>
+                                    <input type="text" class="form-control" id="anzahl" name="anzahl" value="{//form/field[@name='anzahl']/value}" placeholder="Anzahl"/>
                                 </div>
-                                <xsl:if test="//formError/field[@name='anzahl'] != ''">
-                                    <p>Fehler! <xsl:value-of select="//formError/field[@name='anzahl']" /></p>
+                                <xsl:if test="//form/field[@name='anzahl']/error != ''">
+                                    <p>Fehler! <xsl:value-of select="//form/field[@name='anzahl']/error" /></p>
                                 </xsl:if>
                             </div>
 
@@ -151,6 +160,8 @@
                                     <button type="submit" class="btn btn-default">Bestellung ausführen</button>
                                 </div>
                             </div>
+
+                            <!--  Message!! -->
 
                     </form>
 

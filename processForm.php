@@ -10,7 +10,16 @@ $renderer = new XslRenderer($dom, new \TheSeer\fXSL\fXSLTProcessor());
 $dataModel = new \TheSeer\fDOM\fDOMDocument();
 $dataModel->load('prototypes/formValidation.xml');
 
-$formValidator = new FormValidator();
-$formValidator->validateRequest($_POST, $dataModel);
+$formValidator = new SportTicketsFormCommand($_POST, $dataModel);
+
+$formValidator->validateRequest();
+$hasErrors = $formValidator->hasErrors();
+
+if ($hasErrors) {
+    $formValidator->repopulateForm();
+} else {
+    $formValidator->writeCsvFile();
+    $hasErrors = $formValidator->hasErrors();
+}
 
 echo $renderer->render($dataModel);

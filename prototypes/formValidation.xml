@@ -1,13 +1,45 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <data>
-    <formError>
-        <field name="name" />
-        <field name="vorname" />
-        <field name="strasse" />
-        <field name="plz" />
-        <field name="ort" />
-        <field name="email" />
-        <field name="sportart" />
-        <field name="anzahl" />
-    </formError>
+    <form>
+        <field name="anrede">
+            <value />
+            <error />
+        </field>
+        <field name="name">
+            <value />
+            <error />
+        </field>
+        <field name="vorname">
+            <value />
+            <error />
+        </field>
+        <field name="strasse">
+            <value />
+            <error />
+        </field>
+        <field name="plz">
+            <value />
+            <error />
+        </field>
+        <field name="ort">
+            <value />
+            <error />
+        </field>
+        <field name="phone">
+            <value />
+            <error />
+        </field>
+        <field name="email">
+            <value />
+            <error />
+        </field>
+        <field name="sportart">
+            <value />
+            <error />
+        </field>
+        <field name="anzahl">
+            <value />
+            <error />
+        </field>
+    </form>
 </data>
