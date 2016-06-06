@@ -1,0 +1,8 @@
+Anrede;Name;Vorname;Strasse;PLZ;Ort;Telefon;Email;Sportart;Anzahl
+Herr;name;vorname;strasse;1352;ort;1234567890;example@example.com;43
+Herr;name;vorname;strasse;2134;ort;1234567890;example@example.com;volleyball;12
+Herr;;vorname;strasse;1234;ort;1234567890;example@example.com;Volleyball;34
+Herr;;vorname;strasse;1234;ort;1234567890;example@example.com;Volleyball;23
+Herr;Peter;Sacco;strasse;5555;ort;"079 555 44 34";example@example.com;Fussball;66
+Frau;Blabla;vorname;strasse;1111;ort;"123 456 789";example@example.com;Handball;44
+Herr;Sacco;Peter;Strasse;2222;Zürich;"123 456 7890";example@example.com;Handball;12
