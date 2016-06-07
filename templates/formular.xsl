@@ -104,16 +104,21 @@
                             </div>
 
                             <div class="form-group row">
-                                <label for="phone" class="col-sm-2 control-label">Telefon Nummer</label>
+                                <label for="phone" class="col-sm-2 control-label">Telefon Nummer *</label>
                                 <div class="col-xs-3">
                                     <input type="text" class="form-control" id="phone" name="phone" value="{//form/field[@name='phone']/value}" placeholder="Telefon"/>
+                                </div>
+                                <div class="text has-error">
+                                    <xsl:if test="//form/field[@name='phone']/error != ''">
+                                        <small class="help-block"><xsl:value-of select="//form/field[@name='phone']/error"/></small>
+                                    </xsl:if>
                                 </div>
                             </div>
 
                             <div class="form-group row">
                                 <label for="email" class="col-sm-2 control-label">E-Mail Adresse *</label>
                                 <div class="col-xs-3">
-                                    <input type="email" class="form-control" id="email" name="email" value="{//form/field[@name='email']/value}" placeholder="Email"/>
+                                    <input type="text" class="form-control" id="email" name="email" value="{//form/field[@name='email']/value}" placeholder="Email"/>
                                 </div>
                                 <div class="text has-error">
                                     <xsl:if test="//form/field[@name='email']/error != ''">

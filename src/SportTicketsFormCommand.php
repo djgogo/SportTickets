@@ -58,7 +58,11 @@ class SportTicketsFormCommand
             $this->dataModel->queryOne('//field[@name="strasse"]/error')->nodeValue = 'Bitte geben sie den Strassen Namen ein';
         }
 
-        if ( $this->plz === '') {
+        if (!is_numeric($this->plz) || strlen($this->plz) > 4) {
+            $this->dataModel->queryOne('//field[@name="plz"]/error')->nodeValue = 'Bitte geben sie eine gültige Postleitzahl ein';
+        }
+
+        if ($this->plz === '') {
             $this->dataModel->queryOne('//field[@name="plz"]/error')->nodeValue = 'Bitte geben sie die Postleitzahl ein';
         }
 
@@ -66,12 +70,24 @@ class SportTicketsFormCommand
             $this->dataModel->queryOne('//field[@name="ort"]/error')->nodeValue = 'Bitte geben sie den Ort ein';
         }
 
-        if ($this->email === '') {
-            $this->dataModel->queryOne('//field[@name="email"]/error')->nodeValue = 'Bitte geben sie eine Email Adresse ein';
+        try {
+            new PhoneNumber($this->phone);
+        } catch (\InvalidArgumentException $e) {
+            $this->dataModel->queryOne('//field[@name="phone"]/error')->nodeValue = 'Bitte geben Sie eine gültige Telefon-Nummer ein';
+        }
+
+        try {
+            new Email($this->email);
+        } catch (\InvalidArgumentException $e) {
+            $this->dataModel->queryOne('//field[@name="email"]/error')->nodeValue = 'Bitte geben Sie eine gültige E-Mail-Adresse ein';
         }
 
         if (!isset($this->sportart)) {
             $this->dataModel->queryOne('//field[@name="sportart"]/error')->nodeValue = 'Bitte wählen Sie eine Sportart aus';
+        }
+
+        if (!is_numeric($this->anzahl) || strlen($this->anzahl) > 3) {
+            $this->dataModel->queryOne('//field[@name="anzahl"]/error')->nodeValue = 'Bitte geben sie eine gültige Anzahl Tickets ein';
         }
 
         if ($this->anzahl === '') {
