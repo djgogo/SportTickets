@@ -7,6 +7,10 @@ spl_autoload_register(
         static $classes = null;
         if ($classes === null) {
             $classes = array(
+                'csvbackend' => '/CsvBackend.php',
+                'getrequest' => '/GetRequest.php',
+                'postrequest' => '/PostRequest.php',
+                'request' => '/Request.php',
                 'sportticketsformcommand' => '/SportTicketsFormCommand.php',
                 'xslrenderer' => '/XslRenderer.php'
             );

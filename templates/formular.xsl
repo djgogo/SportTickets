@@ -28,7 +28,11 @@
 
                     <form class="form-horizontal" action="/processForm.php" method="post">
 
-                        <h3>Kontaktdaten</h3>
+                            <div class="form-group row">
+                                <div class="col-sm-2 control-label">
+                                    <h3 class="text-info">Kontaktdaten</h3>
+                                </div>
+                            </div>
 
                             <div class="form-group row">
                                 <label for="anrede" class="col-sm-2 control-label">Anrede</label>
@@ -43,9 +47,11 @@
                                 <div class="col-xs-3">
                                     <input type="text" class="form-control" id="name" name="name" value="{//form/field[@name='name']/value}" placeholder="Name"/>
                                 </div>
-                                <xsl:if test="//form/field[@name='name']/error != ''">
-                                    <p>Fehler! <xsl:value-of select="//form/field[@name='name']/error" /></p>
-                                </xsl:if>
+                                <div class="text has-error">
+                                    <xsl:if test="//form/field[@name='name']/error != ''">
+                                        <small class="help-block"><xsl:value-of select="//form/field[@name='name']/error"/></small>
+                                     </xsl:if>
+                                </div>
                             </div>
 
                             <div class="form-group row">
@@ -53,9 +59,11 @@
                                 <div class="col-xs-3">
                                     <input type="text" class="form-control" id="vorname" name ="vorname" value="{//form/field[@name='vorname']/value}" placeholder="Vorname"/>
                                 </div>
-                                <xsl:if test="//form/field[@name='vorname']/error!= ''">
-                                    <p>Fehler! <xsl:value-of select="//form/field[@name='vorname']/error" /></p>
-                                </xsl:if>
+                                <div class="text has-error">
+                                    <xsl:if test="//form/field[@name='vorname']/error != ''">
+                                        <small class="help-block"><xsl:value-of select="//form/field[@name='vorname']/error"/></small>
+                                    </xsl:if>
+                                </div>
                             </div>
 
                             <div class="form-group row">
@@ -63,9 +71,11 @@
                                 <div class="col-xs-3">
                                     <input type="text" class="form-control" id="strasse" name="strasse" value="{//form/field[@name='strasse']/value}" placeholder="Strasse"/>
                                 </div>
-                                <xsl:if test="//form/field[@name='strasse']/error != ''">
-                                    <p>Fehler! <xsl:value-of select="//form/field[@name='strasse']/error" /></p>
-                                </xsl:if>
+                                <div class="text has-error">
+                                    <xsl:if test="//form/field[@name='strasse']/error != ''">
+                                        <small class="help-block"><xsl:value-of select="//form/field[@name='strasse']/error"/></small>
+                                    </xsl:if>
+                                </div>
                             </div>
 
 
@@ -74,9 +84,11 @@
                                 <div class="col-xs-1">
                                     <input type="text" class="form-control" id="plz" name="plz" value="{//form/field[@name='plz']/value}" placeholder="PLZ"/>
                                 </div>
-                                <xsl:if test="//form/field[@name='plz']/error != ''">
-                                    <p>Fehler! <xsl:value-of select="//form/field[@name='plz']/error" /></p>
-                                </xsl:if>
+                                <div class="text has-error">
+                                    <xsl:if test="//form/field[@name='plz']/error != ''">
+                                        <small class="help-block"><xsl:value-of select="//form/field[@name='plz']/error"/></small>
+                                    </xsl:if>
+                                </div>
                             </div>
 
                             <div class="form-group row">
@@ -84,9 +96,11 @@
                                 <div class="col-xs-3">
                                     <input type="text" class="form-control" id="ort" name="ort" value="{//form/field[@name='ort']/value}" placeholder="Ort"/>
                                 </div>
-                                <xsl:if test="//form/field[@name='ort']/error != ''">
-                                    <p>Fehler! <xsl:value-of select="//form/field[@name='ort']/error" /></p>
-                                </xsl:if>
+                                <div class="text has-error">
+                                    <xsl:if test="//form/field[@name='ort']/error != ''">
+                                        <small class="help-block"><xsl:value-of select="//form/field[@name='ort']/error"/></small>
+                                    </xsl:if>
+                                </div>
                             </div>
 
                             <div class="form-group row">
@@ -101,12 +115,18 @@
                                 <div class="col-xs-3">
                                     <input type="email" class="form-control" id="email" name="email" value="{//form/field[@name='email']/value}" placeholder="Email"/>
                                 </div>
-                                <xsl:if test="//form/field[@name='email']/error != ''">
-                                    <p>Fehler! <xsl:value-of select="//form/field[@name='email']/error" /></p>
-                                </xsl:if>
+                                <div class="text has-error">
+                                    <xsl:if test="//form/field[@name='email']/error != ''">
+                                        <small class="help-block"><xsl:value-of select="//form/field[@name='email']/error"/></small>
+                                    </xsl:if>
+                                </div>
                             </div>
 
-                        <h3>Tickets</h3>
+                        <div class="form-group row">
+                            <div class="col-sm-2 control-label">
+                                <h3 class="text-info">Tickets</h3>
+                            </div>
+                        </div>
 
                             <div class="form-group row">
                                 <label class="col-sm-2 control-label">Sportart</label>
@@ -140,28 +160,36 @@
                                     </div>
                                 </div>
                             </div>
-                            <xsl:if test="//form/field[@name='sportart']/error != ''">
-                                <p>Fehler! <xsl:value-of select="//form/field[@name='sportart']/error" /></p>
-                            </xsl:if>
+                            <div class="text has-error">
+                                <xsl:if test="//form/field[@name='sportart']/error != ''">
+                                    <small class="help-block"><xsl:value-of select="//form/field[@name='sportart']/error"/></small>
+                                </xsl:if>
+                            </div>
 
                             <div class="form-group row">
                                 <label for="anzahl" class="col-sm-2 control-label">Anzahl Tickets *</label>
                                 <div class="col-xs-3">
                                     <input type="text" class="form-control" id="anzahl" name="anzahl" value="{//form/field[@name='anzahl']/value}" placeholder="Anzahl"/>
                                 </div>
-                                <xsl:if test="//form/field[@name='anzahl']/error != ''">
-                                    <p>Fehler! <xsl:value-of select="//form/field[@name='anzahl']/error" /></p>
-                                </xsl:if>
+                                <div class="text has-error">
+                                    <xsl:if test="//form/field[@name='anzahl']/error != ''">
+                                        <small class="help-block"><xsl:value-of select="//form/field[@name='anzahl']/error"/></small>
+                                    </xsl:if>
+                                </div>
                             </div>
 
 
                             <div class="form-group row">
                                 <div class="col-sm-offset-2 col-sm-10">
-                                    <button type="submit" class="btn btn-default">Bestellung ausführen</button>
+                                    <button type="submit" class="btn btn-primary">Bestellung ausführen</button>
                                 </div>
                             </div>
 
-                            <!--  Message!! -->
+                        <xsl:if test="//form/field[@name='message']/value != ''">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <p class="text-success"> Success! <xsl:value-of select="//form/field[@name='message']/value" /></p>
+                            </div>
+                        </xsl:if>
 
                     </form>
 

@@ -1,22 +1,47 @@
 <?php
-
+declare(strict_types=1);
 
 class SportTicketsFormCommand
 {
-    public function __construct(array $postRequest, \TheSeer\fDOM\fDOMDocument $dataModel)
+    private $anrede;
+    private $name;
+    private $vorname;
+    private $strasse;
+    private $plz;
+    private $ort;
+    private $phone;
+    private $email;
+    private $anzahl;
+    private $dataModel;
+
+    /**
+     * @var CsvBackend
+     */
+    private $csvBackend;
+    /**
+     * @var Request
+     */
+    private $postRequest;
+
+    public function __construct(CsvBackend $csvBackend, Request $postRequest, \TheSeer\fDOM\fDOMDocument $dataModel)
     {
-        $this->anrede = $postRequest['anrede'];
-        $this->name = $postRequest['name'];
-        $this->vorname = $postRequest['vorname'];
-        $this->strasse = $postRequest['strasse'];
-        $this->plz = $postRequest['plz'];
-        $this->ort = $postRequest['ort'];
-        $this->phone = $postRequest['phone'];
-        $this->email = $postRequest['email'];
-        $this->sportart = $postRequest['sportart'];
-        $this->anzahl = $postRequest['anzahl'];
+        $this->anrede = $postRequest->getParameter('anrede');
+        $this->name = $postRequest->getParameter('name');
+        $this->vorname = $postRequest->getParameter('vorname');
+        $this->strasse = $postRequest->getParameter('strasse');
+        $this->plz = $postRequest->getParameter('plz');
+        $this->ort = $postRequest->getParameter('ort');
+        $this->phone = $postRequest->getParameter('phone');
+        $this->email = $postRequest->getParameter('email');
+        $this->anzahl = $postRequest->getParameter('anzahl');
+
+        if ($postRequest->hasParameter('sportart')) {
+            $this->sportart = $postRequest->getParameter('sportart');
+        }
 
         $this->dataModel = $dataModel;
+        $this->postRequest = $postRequest;
+        $this->csvBackend = $csvBackend;
     }
 
     public function validateRequest()
@@ -45,7 +70,7 @@ class SportTicketsFormCommand
             $this->dataModel->queryOne('//field[@name="email"]/error')->nodeValue = 'Bitte geben sie eine Email Adresse ein';
         }
 
-        if (empty($this->sportart)) {
+        if (!isset($this->sportart)) {
             $this->dataModel->queryOne('//field[@name="sportart"]/error')->nodeValue = 'Bitte wählen Sie eine Sportart aus';
         }
 
@@ -57,10 +82,11 @@ class SportTicketsFormCommand
         //echo $this->dataModel->saveXML(); exit;
     }
 
-    public function writeCsvFile()
+    public function performAction()
     {
         if (!file_exists('/var/www/petersacco.ch/data/tickets.csv')) {
-            $this->outputHeader();
+            $header = "Anrede;Name;Vorname;Strasse;PLZ;Ort;Telefon;Email;Sportart;Anzahl\n";
+            $this->csvBackend->outputHeader($header);
         }
 
         $row = [
@@ -76,20 +102,12 @@ class SportTicketsFormCommand
             $this->anzahl
         ];
 
-        $file = fopen("/var/www/petersacco.ch/data/tickets.csv","a");
-        fputcsv($file, $row, ';');
-        fclose($file);
+        if ($this->csvBackend->writeCsvFile($row)){
+            $this->dataModel->queryOne('//field[@name="message"]/value')->nodeValue = 'Vielen Dank für die Bestellung';
+        }
     }
 
-    private function outputHeader()
-    {
-        $header = "Anrede;Name;Vorname;Strasse;PLZ;Ort;Telefon;Email;Sportart;Anzahl\n";
-        $file = fopen("/var/www/petersacco.ch/data/tickets.csv","c");
-        fputs($file, $header);
-        fclose($file);
-    }
-
-    public function hasErrors()
+    public function hasErrors() : bool
     {
         $nodeList = $this->dataModel->query('//field/error');
         foreach ($nodeList as $node) {

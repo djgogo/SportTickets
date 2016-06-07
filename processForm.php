@@ -2,6 +2,8 @@
 <?php
 require_once __DIR__ . '/bootstrap.php';
 
+$filePath = '/var/www/petersacco.ch/data/tickets.csv';
+
 $dom = new \TheSeer\fDOM\fDOMDocument();
 $dom->load(__DIR__.'/templates/formular.xsl');
 
@@ -10,16 +12,17 @@ $renderer = new XslRenderer($dom, new \TheSeer\fXSL\fXSLTProcessor());
 $dataModel = new \TheSeer\fDOM\fDOMDocument();
 $dataModel->load('prototypes/formValidation.xml');
 
-$formValidator = new SportTicketsFormCommand($_POST, $dataModel);
+$csvBackend = new CsvBackend($filePath);
+$request = Request::fromSuperGlobals();
 
-$formValidator->validateRequest();
-$hasErrors = $formValidator->hasErrors();
+$sportTicketsFormCommand = new SportTicketsFormCommand($csvBackend, $request, $dataModel);
 
-if ($hasErrors) {
-    $formValidator->repopulateForm();
+$sportTicketsFormCommand->validateRequest();
+
+if ($sportTicketsFormCommand->hasErrors()) {
+    $sportTicketsFormCommand->repopulateForm();
 } else {
-    $formValidator->writeCsvFile();
-    $hasErrors = $formValidator->hasErrors();
+    $sportTicketsFormCommand->performAction();
 }
 
 echo $renderer->render($dataModel);

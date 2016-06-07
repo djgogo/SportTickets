@@ -41,5 +41,8 @@
             <value />
             <error />
         </field>
+        <field name="message">
+            <value />
+        </field>
     </form>
 </data>
