@@ -2,8 +2,8 @@
 <data>
     <form>
         <field name="anrede">
-            <value />
-            <error />
+            <herr />
+            <frau />
         </field>
         <field name="name">
             <value />

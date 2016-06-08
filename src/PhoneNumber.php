@@ -14,7 +14,6 @@ class PhoneNumber
     public function __construct($number)
     {
         $this->ensureValid($number);
-        $this->number = $number;
     }
 
     /**
@@ -29,6 +28,7 @@ class PhoneNumber
         if (empty($number) || strlen($number) > 50) {
             throw new \InvalidPhoneNumberException();
         }
+        $this->number = $number;
     }
 
     /**

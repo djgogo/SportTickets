@@ -3,17 +3,46 @@ declare(strict_types=1);
 
 class SportTicketsFormCommand
 {
+    /**
+     * @var string
+     */
     private $anrede;
+    /**
+     * @var string
+     */
     private $name;
+    /**
+     * @var string
+     */
     private $vorname;
+    /**
+     * @var string
+     */
     private $strasse;
+    /**
+     * @var string
+     */
     private $plz;
+    /**
+     * @var string
+     */
     private $ort;
+    /**
+     * @var string
+     */
     private $phone;
+    /**
+     * @var string
+     */
     private $email;
+    /**
+     * @var string
+     */
     private $anzahl;
+    /**
+     * @var \TheSeer\fDOM\fDOMDocument
+     */
     private $dataModel;
-
     /**
      * @var CsvBackend
      */
@@ -23,6 +52,11 @@ class SportTicketsFormCommand
      */
     private $postRequest;
 
+    /**
+     * @param CsvBackend $csvBackend
+     * @param Request $postRequest
+     * @param \TheSeer\fDOM\fDOMDocument $dataModel
+     */
     public function __construct(CsvBackend $csvBackend, Request $postRequest, \TheSeer\fDOM\fDOMDocument $dataModel)
     {
         $this->anrede = $postRequest->getParameter('anrede');
@@ -37,6 +71,8 @@ class SportTicketsFormCommand
 
         if ($postRequest->hasParameter('sportart')) {
             $this->sportart = $postRequest->getParameter('sportart');
+        } else {
+            $this->sportart = '';
         }
 
         $this->dataModel = $dataModel;
@@ -46,28 +82,8 @@ class SportTicketsFormCommand
 
     public function validateRequest()
     {
-        if ($this->name === '') {
-            $this->dataModel->queryOne('//field[@name="name"]/error')->nodeValue = 'Bitte geben Sie einen Namen ein';
-        }
-
-        if ($this->vorname === '') {
-            $this->dataModel->queryOne('//field[@name="vorname"]/error')->nodeValue = 'Bitte geben sie einen Vornamen ein';
-        }
-
-        if ($this->strasse === '') {
-            $this->dataModel->queryOne('//field[@name="strasse"]/error')->nodeValue = 'Bitte geben sie den Strassen Namen ein';
-        }
-
-        if (!is_numeric($this->plz) || strlen($this->plz) > 4) {
+        if (!ctype_digit($this->plz) || strlen($this->plz) > 4) {
             $this->dataModel->queryOne('//field[@name="plz"]/error')->nodeValue = 'Bitte geben sie eine gültige Postleitzahl ein';
-        }
-
-        if ($this->plz === '') {
-            $this->dataModel->queryOne('//field[@name="plz"]/error')->nodeValue = 'Bitte geben sie die Postleitzahl ein';
-        }
-
-        if ($this->ort === '') {
-            $this->dataModel->queryOne('//field[@name="ort"]/error')->nodeValue = 'Bitte geben sie den Ort ein';
         }
 
         try {
@@ -79,32 +95,38 @@ class SportTicketsFormCommand
         try {
             new Email($this->email);
         } catch (\InvalidArgumentException $e) {
-            $this->dataModel->queryOne('//field[@name="email"]/error')->nodeValue = 'Bitte geben Sie eine gültige E-Mail-Adresse ein';
+            $this->dataModel->queryOne('//field[@name="email"]/error')->nodeValue = 'Bitte geben Sie eine gültige Email-Adresse ein';
         }
 
-        if (!isset($this->sportart)) {
-            $this->dataModel->queryOne('//field[@name="sportart"]/error')->nodeValue = 'Bitte wählen Sie eine Sportart aus';
-        }
-
-        if (!is_numeric($this->anzahl) || strlen($this->anzahl) > 3) {
+        if (!ctype_digit($this->anzahl) || strlen($this->anzahl) > 3) {
             $this->dataModel->queryOne('//field[@name="anzahl"]/error')->nodeValue = 'Bitte geben sie eine gültige Anzahl Tickets ein';
         }
 
-        if ($this->anzahl === '') {
-            $this->dataModel->queryOne('//field[@name="anzahl"]/error')->nodeValue = 'Bitte geben sie die Anzahl Tickets ein';
-        }
+        $this->validateEmptyFormField($this->name, 'name', 'Bitte geben sie einen Namen ein');
+        $this->validateEmptyFormField($this->vorname, 'vorname', 'Bitte geben sie einen Vornamen ein');
+        $this->validateEmptyFormField($this->strasse, 'strasse', 'Bitte geben sie einen Strassen Namen ein');
+        $this->validateEmptyFormField($this->plz, 'plz', 'Bitte geben sie die Postleitzahl ein');
+        $this->validateEmptyFormField($this->ort, 'ort', 'Bitte geben sie den Ort ein');
+        $this->validateEmptyFormField($this->phone, 'phone', 'Bitte geben sie eine Telefon-Nummer ein');
+        $this->validateEmptyFormField($this->email, 'email', 'Bitte geben sie eine Email Adresse ein');
+        $this->validateEmptyFormField($this->sportart, 'sportart', 'Bitte wählen Sie eine Sportart aus');
+        $this->validateEmptyFormField($this->anzahl, 'anzahl', 'Bitte geben sie die Anzahl Tickets ein');
+    }
 
-        //var_export($_POST); exit;
-        //echo $this->dataModel->saveXML(); exit;
+    /**
+     * @param string $field
+     * @param string $fieldName
+     * @param string $value
+     */
+    private function validateEmptyFormField(string $field, string $fieldName, string $value)
+    {
+        if ($field === '') {
+            $this->dataModel->queryOne('//field[@name="'. $fieldName .'"]/error')->nodeValue = $value;
+        }
     }
 
     public function performAction()
     {
-        if (!file_exists('/var/www/petersacco.ch/data/tickets.csv')) {
-            $header = "Anrede;Name;Vorname;Strasse;PLZ;Ort;Telefon;Email;Sportart;Anzahl\n";
-            $this->csvBackend->outputHeader($header);
-        }
-
         $row = [
             $this->anrede,
             $this->name,
@@ -118,11 +140,18 @@ class SportTicketsFormCommand
             $this->anzahl
         ];
 
-        if ($this->csvBackend->writeCsvFile($row)){
+        $csvHeader = "Anrede;Name;Vorname;Strasse;PLZ;Ort;Telefon;Email;Sportart;Anzahl\n";
+
+        if ($this->csvBackend->writeDataToCsv($csvHeader, $row)){
             $this->dataModel->queryOne('//field[@name="message"]/value')->nodeValue = 'Vielen Dank für die Bestellung';
+        } else {
+            $this->dataModel->queryOne('//field[@name="message"]/value')->nodeValue = 'Fehler: Die Bestellung konnte nicht ausgeführt werden';
         }
     }
 
+    /**
+     * @return bool
+     */
     public function hasErrors() : bool
     {
         $nodeList = $this->dataModel->query('//field/error');
@@ -132,52 +161,39 @@ class SportTicketsFormCommand
                 return true;
             }
         }
-
         return false;
     }
 
     public function repopulateForm()
     {
-        if (!empty($this->anrede)) {
-            $this->dataModel->queryOne('//field[@name="anrede"]/value')->nodeValue = $this->anrede;
+        if ($this->anrede == 'Herr') {
+            $this->dataModel->queryOne('//field[@name="anrede"]/herr')->nodeValue = 'selected';
+            $this->dataModel->queryOne('//field[@name="anrede"]/frau')->nodeValue = '';
+        } else {
+            $this->dataModel->queryOne('//field[@name="anrede"]/herr')->nodeValue = '';
+            $this->dataModel->queryOne('//field[@name="anrede"]/frau')->nodeValue = 'selected';
         }
 
-        if (!empty($this->name)) {
-            $this->dataModel->queryOne('//field[@name="name"]/value')->nodeValue = $this->name;
-        }
+        $this->repopulate($this->name, 'name');
+        $this->repopulate($this->vorname, 'vorname');
+        $this->repopulate($this->strasse, 'strasse');
+        $this->repopulate($this->plz, 'plz');
+        $this->repopulate($this->ort, 'ort');
+        $this->repopulate($this->phone, 'phone');
+        $this->repopulate($this->email, 'email');
+        $this->repopulate($this->sportart, 'sportart');
+        $this->repopulate($this->anzahl, 'anzahl');
+    }
 
-        if (!empty($this->vorname)) {
-            $this->dataModel->queryOne('//field[@name="vorname"]/value')->nodeValue = $this->vorname;
+    /**
+     * @param string $field
+     * @param string $fieldName
+     */
+    private function repopulate(string $field, string $fieldName)
+    {
+        if (!empty($field)) {
+            $this->dataModel->queryOne('//field[@name="'. $fieldName .'"]/value')->nodeValue = $field;
         }
-
-        if (!empty($this->strasse)) {
-            $this->dataModel->queryOne('//field[@name="strasse"]/value')->nodeValue = $this->strasse;
-        }
-
-        if (!empty($this->plz)) {
-            $this->dataModel->queryOne('//field[@name="plz"]/value')->nodeValue = $this->plz;
-        }
-
-        if (!empty($this->ort)) {
-            $this->dataModel->queryOne('//field[@name="ort"]/value')->nodeValue = $this->ort;
-        }
-
-        if (!empty($this->phone)) {
-            $this->dataModel->queryOne('//field[@name="phone"]/value')->nodeValue = $this->phone;
-        }
-
-        if (!empty($this->email)) {
-            $this->dataModel->queryOne('//field[@name="email"]/value')->nodeValue = $this->email;
-        }
-
-        if (!empty($this->sportart)) {
-            $this->dataModel->queryOne('//field[@name="sportart"]/value')->nodeValue = $this->sportart;
-        }
-
-        if (!empty($this->anzahl)) {
-            $this->dataModel->queryOne('//field[@name="anzahl"]/value')->nodeValue = $this->anzahl;
-        }
-
     }
 }
 

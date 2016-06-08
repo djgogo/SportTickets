@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 use TheSeer\fDOM\fDOMDocument;
 use TheSeer\fXSL\fXSLTProcessor;
