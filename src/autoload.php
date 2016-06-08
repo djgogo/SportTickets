@@ -8,7 +8,11 @@ spl_autoload_register(
         if ($classes === null) {
             $classes = array(
                 'csvbackend' => '/CsvBackend.php',
+                'email' => '/Email.php',
                 'getrequest' => '/GetRequest.php',
+                'invalidemailexception' => '/InvalidEmailException.php',
+                'invalidphonenumberexception' => '/InvalidPhoneNumberException.php',
+                'phonenumber' => '/PhoneNumber.php',
                 'postrequest' => '/PostRequest.php',
                 'request' => '/Request.php',
                 'sportticketsformcommand' => '/SportTicketsFormCommand.php',

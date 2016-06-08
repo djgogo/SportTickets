@@ -18,3 +18,6 @@ Herr;name;vorname;strasse;2222;ort;"12 3456 7890";example@example.com;Fussball;7
 Frau;Wilfinger;Sandra;strasse;3214;ort;1234567890;example@example.com;Handball;34
 Herr;asdf;vorname;strasse;plz;ort;1234567890;example@example.com;Volleyball;anzahl
 Herr;Muster;Hans;strasse;5656;ort;1234567890;example@example.com;Fussball;99
+Herr;name;vorname;strasse;8888;ort;1234567890;example@example.com;Volleyball;55
+Herr;name;vorname;strasse;plz;ort;"079 416 65 26";example@example.com;Volleyball;anzahl
+Herr;name;vorname;strasse;1234;ort;1234567890;example@example.com;Volleyball;1
