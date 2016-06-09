@@ -4,4 +4,4 @@ build
 build.xml
 phpunit.xml
 bootstrap
-data
+data/tickets.csv

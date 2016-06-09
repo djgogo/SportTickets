@@ -42,7 +42,7 @@ class CsvBackend
      */
     private function outputHeader(string $header)
     {
-        $file = fopen($this->path,'c');
+        $file = @fopen($this->path,'c');
         if ($file == false) {
             throw new CsvBackendException('Datei "' . $this->path . '" konnte nicht geöffnet werden');
         }
