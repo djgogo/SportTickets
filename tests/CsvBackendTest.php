@@ -44,15 +44,6 @@ class CsvBackendTest extends PHPUnit_Framework_TestCase
         $this->csvBackend = new CsvBackend($this->path);
     }
 
-    public function testFileCreationIfFileNotExist()
-    {
-        $this->assertFalse(file_exists($this->path));
-        $file = fopen($this->path,'c');
-        $this->assertTrue(file_exists($this->path));
-        fclose($file);
-        unlink($this->path);
-    }
-
     public function testFileCannotBeOpenedThrowsException()
     {
         $this->expectException('Exception');
@@ -65,7 +56,7 @@ class CsvBackendTest extends PHPUnit_Framework_TestCase
 
     public function testHeaderAndRowCanBeWritten()
     {
-        $this->assertTrue($this->csvBackend->writeDataToCsv($this->header, $this->row));
+        $this->csvBackend->writeDataToCsv($this->header, $this->row);
         $this->assertTrue(file_exists($this->path));
 
         $expectedContent = implode(';', $this->row);

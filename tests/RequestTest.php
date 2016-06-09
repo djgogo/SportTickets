@@ -5,35 +5,31 @@ declare(strict_types = 1);
  * @covers Request
  * @covers PostRequest
  */
-class PostRequestTest extends PHPUnit_Framework_TestCase
+class RequestTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @var PostRequest
      */
     private $postRequest;
 
+    private $post;
+
     public function setUp()
     {
-        $_SERVER['REQUEST_METHOD'] = 'POST';
-        $_POST['anrede'] = 'Herr';
-        $_POST['name'] = 'Muster';
-        $_POST['vorname'] = 'Hans';
+//        $_SERVER['REQUEST_METHOD'] = 'POST';
+        $this->post['anrede'] = 'Herr';
+        $this->post['name'] = 'Muster';
+        $this->post['vorname'] = 'Hans';
 
-        $this->postRequest = new PostRequest($_POST);
-    }
+        $this->postRequest = new PostRequest($this->post);
 
-    public function testPostRequestReturnsRightObject()
-    {
-        $this->postRequest->fromSuperGlobals();
-        $this->assertInstanceOf(PostRequest::class, $this->postRequest);
+        $this->postRequest->getParameter('anrede');
     }
 
     public function testGetRequestReturnsRightObject()
     {
         $_SERVER['REQUEST_METHOD'] = 'GET';
-
-        $this->postRequest->fromSuperGlobals();
-        $this->assertInstanceOf(PostRequest::class, $this->postRequest);
+        $this->assertInstanceOf(GetRequest::class, $this->postRequest->fromSuperGlobals());
     }
 
     public function testFromSuperGlobalsWithOtherRequestMethodThrowsException()
@@ -42,12 +38,6 @@ class PostRequestTest extends PHPUnit_Framework_TestCase
 
         $_SERVER['REQUEST_METHOD'] = 'PUT';
         $this->postRequest->fromSuperGlobals();
-    }
-
-    public function testPostRequestReturnsRightParameters()
-    {
-        $this->postRequest->fromSuperGlobals();
-        $this->assertEquals($_POST, ['anrede' => 'Herr', 'name' => 'Muster', 'vorname' => 'Hans']);
     }
 
     public function testParameterCanBeRetrieved()
@@ -63,7 +53,6 @@ class PostRequestTest extends PHPUnit_Framework_TestCase
 
     public function testParametersCanBeRetrieved()
     {
-        $expectedRequest = $_POST;
-        $this->assertEquals($expectedRequest, $this->postRequest->getParameters());
+        $this->assertEquals($this->post, $this->postRequest->getParameters());
     }
 }

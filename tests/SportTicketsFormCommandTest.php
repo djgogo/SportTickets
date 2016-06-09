@@ -90,16 +90,16 @@ class SportTicketsFormCommandTest extends PHPUnit_Framework_TestCase
     private function getRequest() : Request
     {
         $_SERVER['REQUEST_METHOD'] = 'POST';
-        $_POST['anrede'] = 'Herr';
-        $_POST['name'] = 'Muster';
-        $_POST['vorname'] = 'Hans';
-        $_POST['strasse'] = 'Street';
-        $_POST['plz'] = '1111';
-        $_POST['ort'] = 'Walhalla';
-        $_POST['phone'] = '011111111';
-        $_POST['email'] = 'example@example.org';
-        $_POST['anzahl'] = '99';
+        $post['anrede'] = 'Herr';
+        $post['name'] = 'Muster';
+        $post['vorname'] = 'Hans';
+        $post['strasse'] = 'Street';
+        $post['plz'] = '1111';
+        $post['ort'] = 'Walhalla';
+        $post['phone'] = '011111111';
+        $post['email'] = 'example@example.org';
+        $post['anzahl'] = '99';
 
-        return new PostRequest($_POST);
+        return new PostRequest($post);
     }
 }
