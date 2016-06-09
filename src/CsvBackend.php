@@ -8,25 +8,45 @@ class CsvBackend
      */
     private $path;
 
-    public function __construct($path)
+    public function __construct(string $path)
     {
         $this->path = $path;
     }
 
-    public function writeCsvFile(array $row) : bool
+    /**
+     * @param string $header
+     * @param array $row
+     * @return bool
+     * @throws CsvBackendException
+     */
+    public function writeDataToCsv(string $header, array $row) : bool
     {
-        $file = fopen($this->path,"a");
+        if(!file_exists($this->path)) {
+            $this->outputHeader($header);
+        }
+
+        $file = fopen($this->path,'a');
         if ($file != false) {
             fputcsv($file, $row, ';');
+            fclose($file);
             return true;
         }
+
         fclose($file);
         return false;
     }
 
-    public function outputHeader(string $header)
+    /**
+     * @param string $header
+     * @throws CsvBackendException
+     */
+    private function outputHeader(string $header)
     {
-        $file = fopen($this->path,"c");
+        $file = fopen($this->path,'c');
+        if ($file == false) {
+            throw new CsvBackendException('Datei "' . $this->path . '" konnte nicht geöffnet werden');
+        }
+
         fputs($file, $header);
         fclose($file);
     }

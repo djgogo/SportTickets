@@ -13,6 +13,10 @@ abstract class Request
         $this->parameters = $request;
     }
 
+    /**
+     * @return Request
+     * @throws Exception
+     */
     public static function fromSuperGlobals() : Request
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
@@ -21,29 +25,35 @@ abstract class Request
             return new PostRequest($_POST);
         }
 
-        throw new Exception();
+        throw new Exception('Nicht unterstützte Request Methode '.$_SERVER['REQUEST_METHOD']);
     }
 
-    public function isGetRequest() : bool
-    {
-        return false;
-    }
-
-    public function isPostRequest() : bool
-    {
-        return false;
-    }
-
+    /**
+     * @param string $parameter
+     * @return bool
+     */
     public function hasParameter(string $parameter) : bool
     {
         return isset($this->parameters[$parameter]);
     }
 
+    /**
+     * @param string $parameter
+     * @return string
+     * @throws Exception
+     */
     public function getParameter(string $parameter) : string
     {
-        return $this->parameters[$parameter];
+        if ($this->hasParameter($parameter)) {
+            return $this->parameters[$parameter];
+        } else {
+            throw new Exception('Request Parameter '. $parameter .' steht nicht zur Verfügung!');
+        }
     }
 
+    /**
+     * @return array
+     */
     public function getParameters() : array
     {
         return $this->parameters;

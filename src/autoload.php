@@ -8,6 +8,7 @@ spl_autoload_register(
         if ($classes === null) {
             $classes = array(
                 'csvbackend' => '/CsvBackend.php',
+                'csvbackendexception' => '/CsvBackendException.php',
                 'email' => '/Email.php',
                 'getrequest' => '/GetRequest.php',
                 'invalidemailexception' => '/InvalidEmailException.php',
