@@ -13,21 +13,6 @@ abstract class Request
     }
 
     /**
-     * @return Request
-     * @throws Exception
-     */
-    public static function fromSuperGlobals() : Request
-    {
-        if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-            return new GetRequest($_GET);
-        } elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            return new PostRequest($_POST);
-        }
-
-        throw new Exception('Nicht unterstützte Request Methode '.$_SERVER['REQUEST_METHOD']);
-    }
-
-    /**
      * @param string $parameter
      * @return bool
      */

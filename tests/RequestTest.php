@@ -16,28 +16,17 @@ class RequestTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-//        $_SERVER['REQUEST_METHOD'] = 'POST';
         $this->post['anrede'] = 'Herr';
         $this->post['name'] = 'Muster';
         $this->post['vorname'] = 'Hans';
 
         $this->postRequest = new PostRequest($this->post);
-
-        $this->postRequest->getParameter('anrede');
     }
 
-    public function testGetRequestReturnsRightObject()
+    public function testHasParameterReturnsRightBoolean()
     {
-        $_SERVER['REQUEST_METHOD'] = 'GET';
-        $this->assertInstanceOf(GetRequest::class, $this->postRequest->fromSuperGlobals());
-    }
-
-    public function testFromSuperGlobalsWithOtherRequestMethodThrowsException()
-    {
-        $this->expectException('Exception');
-
-        $_SERVER['REQUEST_METHOD'] = 'PUT';
-        $this->postRequest->fromSuperGlobals();
+        $this->assertTrue($this->postRequest->hasParameter('name'));
+        $this->assertFalse($this->postRequest->hasParameter('Invlaid Parameter'));
     }
 
     public function testParameterCanBeRetrieved()
