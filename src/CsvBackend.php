@@ -26,24 +26,22 @@ class CsvBackend
         }
 
         $file = fopen($this->path,'a');
-        if ($file != false) {
+        if ($file !== false) {
             $lengthOfWrittenString = fputcsv($file, $row, ';');
-            if ($lengthOfWrittenString == false) {
+            if ($lengthOfWrittenString === false) {
                 throw new CsvBackendException('Datensatz konnte nicht gespeichert werden');
             }
             $close = fclose($file);
-            if ($close == false) {
+            if ($close === false) {
                 throw new CsvBackendException('Datei "' . $this->path . '" konnte nicht geschlossen werden');
             }
             return;
         }
 
         $close2 = fclose($file);
-        if ($close2 == false) {
+        if ($close2 === false) {
             throw new CsvBackendException('Datei "' . $this->path . '" konnte nicht geschlossen werden');
         }
-
-        throw new CsvBackendException('Datei "' . $this->path . '" konnte nicht bearbeitet werden');
     }
 
     /**
@@ -53,17 +51,17 @@ class CsvBackend
     private function outputHeader(string $header)
     {
         $file = @fopen($this->path,'c');
-        if ($file == false) {
+        if ($file === false) {
             throw new CsvBackendException('Datei "' . $this->path . '" konnte nicht geöffnet werden');
         }
 
         $amountOfWrittenBytes = fputs($file, $header);
-        if ($amountOfWrittenBytes == false) {
+        if ($amountOfWrittenBytes === false) {
             throw new CsvBackendException('Datensatz konnte nicht gespeichert werden');
         }
 
         $close = fclose($file);
-        if ($close == false) {
+        if ($close === false) {
             throw new CsvBackendException('Datei "' . $this->path . '" konnte nicht geschlossen werden');
         }
     }

@@ -25,7 +25,7 @@ class CsvBackendTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->path = '/var/www/petersacco.ch/tests/testdata/test.csv';
+        $this->path = __DIR__.'/../tests/testdata/test.csv';
         $this->header = "Anrede;Name;Vorname;Strasse;PLZ;Ort;Telefon;Email;Sportart;Anzahl\n";
 
         $this->row = [
@@ -48,7 +48,7 @@ class CsvBackendTest extends PHPUnit_Framework_TestCase
     {
         $this->expectException('Exception');
 
-        $invalidPath = '/var/www/petersacco.ch/wrong/wrong.csv';
+        $invalidPath = __DIR__.'/../wrong/wrong.csv';
         $invalidCsvBackend = new CsvBackend($invalidPath);
 
         $this->assertFalse($invalidCsvBackend->writeDataToCsv($this->header, $this->row));
