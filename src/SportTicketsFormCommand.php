@@ -142,9 +142,10 @@ class SportTicketsFormCommand
 
         $csvHeader = "Anrede;Name;Vorname;Strasse;PLZ;Ort;Telefon;Email;Sportart;Anzahl\n";
 
-        if ($this->csvBackend->writeDataToCsv($csvHeader, $row)){
+        try {
+            $this->csvBackend->writeDataToCsv($csvHeader, $row);
             $this->dataModel->queryOne('//field[@name="message"]/value')->nodeValue = 'Vielen Dank für die Bestellung';
-        } else {
+        } catch (\Throwable $e) {
             $this->dataModel->queryOne('//field[@name="message"]/value')->nodeValue = 'Fehler: Die Bestellung konnte nicht ausgeführt werden';
         }
     }

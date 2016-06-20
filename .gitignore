@@ -1,6 +1,6 @@
 src/autoload.php
 tests/autoload.php
-build/*
+build
 build.xml
 phpunit.xml
 bootstrap

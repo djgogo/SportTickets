@@ -1,6 +1,5 @@
 <?php
 declare(strict_types = 1);
-
 abstract class Request
 {
     /**
@@ -11,21 +10,6 @@ abstract class Request
     public function __construct(array $request)
     {
         $this->parameters = $request;
-    }
-
-    /**
-     * @return Request
-     * @throws Exception
-     */
-    public static function fromSuperGlobals() : Request
-    {
-        if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-            return new GetRequest($_GET);
-        } elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            return new PostRequest($_POST);
-        }
-
-        throw new Exception('Nicht unterstützte Request Methode '.$_SERVER['REQUEST_METHOD']);
     }
 
     /**
