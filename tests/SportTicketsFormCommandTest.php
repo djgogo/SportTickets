@@ -12,11 +12,7 @@ declare(strict_types = 1);
 class SportTicketsFormCommandTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @var Request
-     */
-    private $request;
-    /**
-     * @var CsvBackend
+     * @var PHPUnit_Framework_MockObject_MockObject
      */
     private $csvBackend;
     /**
@@ -27,12 +23,20 @@ class SportTicketsFormCommandTest extends PHPUnit_Framework_TestCase
      * @var SportTicketsFormCommand
      */
     private $sportTicketsFormCommand;
+    /**
+     * @var Request
+     */
+    private $request;
 
     public function setUp()
     {
         $this->csvBackend = $this->getMockBuilder(CsvBackend::class)->disableOriginalConstructor()->getMock();
         $this->dataModel = new \TheSeer\fDOM\fDOMDocument();
         $this->dataModel->load(__DIR__.'/../prototypes/formValidation.xml');
+
+        $this->request = $this->getValidRequestArray();
+        $this->request = new PostRequest($this->request);
+        $this->sportTicketsFormCommand = new SportTicketsFormCommand($this->csvBackend, $this->request, $this->dataModel);
     }
 
     /**
@@ -46,8 +50,8 @@ class SportTicketsFormCommandTest extends PHPUnit_Framework_TestCase
         $request[$fieldToEmpty] = '';
         $request = new PostRequest($request);
 
-        $this->sportTicketsFormCommand = new SportTicketsFormCommand($this->csvBackend, $request, $this->dataModel);
-        $this->sportTicketsFormCommand->validateRequest();
+        $sportTicketsFormCommand = new SportTicketsFormCommand($this->csvBackend, $request, $this->dataModel);
+        $sportTicketsFormCommand->validateRequest();
 
         $this->assertEquals($expectedErrorMessage,
             $this->dataModel->queryOne('//field[@name="'. $fieldToEmpty .'"]/error')->nodeValue);
@@ -63,8 +67,8 @@ class SportTicketsFormCommandTest extends PHPUnit_Framework_TestCase
         $request['plz'] = $number;
         $request = new PostRequest($request);
 
-        $this->sportTicketsFormCommand = new SportTicketsFormCommand($this->csvBackend, $request, $this->dataModel);
-        $this->sportTicketsFormCommand->validateRequest();
+        $sportTicketsFormCommand = new SportTicketsFormCommand($this->csvBackend, $request, $this->dataModel);
+        $sportTicketsFormCommand->validateRequest();
 
         $this->assertEquals($expectedErrorMessage,
             $this->dataModel->queryOne('//field[@name="plz"]/error')->nodeValue);
@@ -80,8 +84,8 @@ class SportTicketsFormCommandTest extends PHPUnit_Framework_TestCase
         $request['anzahl'] = $number;
         $request = new PostRequest($request);
 
-        $this->sportTicketsFormCommand = new SportTicketsFormCommand($this->csvBackend, $request, $this->dataModel);
-        $this->sportTicketsFormCommand->validateRequest();
+        $sportTicketsFormCommand = new SportTicketsFormCommand($this->csvBackend, $request, $this->dataModel);
+        $sportTicketsFormCommand->validateRequest();
 
         $this->assertEquals($expectedErrorMessage,
             $this->dataModel->queryOne('//field[@name="anzahl"]/error')->nodeValue);
@@ -94,8 +98,8 @@ class SportTicketsFormCommandTest extends PHPUnit_Framework_TestCase
         $request['phone'] = 'invalidphonenumber';
         $request = new PostRequest($request);
 
-        $this->sportTicketsFormCommand = new SportTicketsFormCommand($this->csvBackend, $request, $this->dataModel);
-        $this->sportTicketsFormCommand->validateRequest();
+        $sportTicketsFormCommand = new SportTicketsFormCommand($this->csvBackend, $request, $this->dataModel);
+        $sportTicketsFormCommand->validateRequest();
 
         $this->assertEquals($expectedErrorMessage,
             $this->dataModel->queryOne('//field[@name="phone"]/error')->nodeValue);
@@ -108,8 +112,8 @@ class SportTicketsFormCommandTest extends PHPUnit_Framework_TestCase
         $request['email'] = 'invalidemail';
         $request = new PostRequest($request);
 
-        $this->sportTicketsFormCommand = new SportTicketsFormCommand($this->csvBackend, $request, $this->dataModel);
-        $this->sportTicketsFormCommand->validateRequest();
+        $sportTicketsFormCommand = new SportTicketsFormCommand($this->csvBackend, $request, $this->dataModel);
+        $sportTicketsFormCommand->validateRequest();
 
         $this->assertEquals($expectedErrorMessage,
             $this->dataModel->queryOne('//field[@name="email"]/error')->nodeValue);
@@ -158,4 +162,69 @@ class SportTicketsFormCommandTest extends PHPUnit_Framework_TestCase
             'anzahl' => '99',
         ];
     }
+
+    public function testHappyPath()
+    {
+        $expectedMessage = 'Vielen Dank für die Bestellung';
+
+        $this->csvBackend
+            ->expects($this->once())
+            ->method('writeDataToCsv');
+
+        $this->sportTicketsFormCommand->performAction();
+
+        $this->assertEquals($expectedMessage,
+            $this->dataModel->queryOne('//field[@name="message"]/value')->nodeValue);
+    }
+
+    public function testOrderFailedCatchesException()
+    {
+        $expectedMessage = 'Fehler: Die Bestellung konnte nicht ausgeführt werden';
+
+        $this->csvBackend
+            ->expects($this->once())
+            ->method('writeDataToCsv')
+            ->will($this->throwException(new \RuntimeException('festplatte kaputt')));
+
+        $this->sportTicketsFormCommand->performAction();
+
+        $this->assertEquals($expectedMessage,
+            $this->dataModel->queryOne('//field[@name="message"]/value')->nodeValue);
+    }
+
+    public function testHasErrorsReturnsRightBoolean()
+    {
+        $this->dataModel->queryOne('//field[@name="email"]/error')->nodeValue = 'Fehler';
+        $this->assertTrue($this->sportTicketsFormCommand->hasErrors());
+
+        $this->dataModel->queryOne('//field[@name="email"]/error')->nodeValue = '';
+        $this->assertFalse($this->sportTicketsFormCommand->hasErrors());
+    }
+
+    /**
+     * @dataProvider FormFieldValuesProvider
+     * @param $fieldName
+     * @param $fieldValue
+     */
+    public function testRepopulatingFormFieldsWorksFine($fieldName, $fieldValue)
+    {
+        $this->sportTicketsFormCommand->repopulateForm();
+        $this->assertEquals($fieldValue, $this->dataModel->queryOne('//field[@name="'. $fieldName .'"]/value')->nodeValue);
+    }
+
+    public function FormFieldValuesProvider() : array
+    {
+        return [
+            ['name', 'Muster'],
+            ['vorname', 'Hans'],
+            ['strasse', 'Street'],
+            ['plz', '1111'],
+            ['ort', 'Walhalla'],
+            ['phone', '011111111'],
+            ['email', 'example@example.org'],
+            ['sportart', 'Handball'],
+            ['anzahl', '99'],
+        ];
+    }
+
 }
