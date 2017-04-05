@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="BrackStore" default="build">
+<project name="PeterSacco" default="build">
     <import file="/var/www/packages/deploy-include-with-version.xml" optional="true" />
 
     <target name="phpab" description="Generate autoloader scripts">
